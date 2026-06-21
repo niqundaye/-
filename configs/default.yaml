@@ -1,0 +1,29 @@
+project:
+  name: heat_resilient_xi_ujimqin
+  seed: 2026
+data:
+  spatial_units: data/raw/spatial_units_xi_ujimqin_2023.csv
+  water_quality: data/raw/water_quality_monitoring_long.csv
+outputs:
+  root: outputs
+  figures: outputs/figures
+  tables: outputs/tables
+model:
+  primary: CatBoostRegressor
+  fallback: RandomForestRegressor
+  test_size: 0.2
+figure4:
+  features:
+    - ndvi
+    - bare_land_prop
+    - land_use_intensity
+    - svf
+    - night_light
+    - elevation_m
+optimization:
+  strategies:
+    - baseline
+    - cooling_priority
+    - ventilation_priority
+    - economic_priority
+    - balanced_development
