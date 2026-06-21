@@ -1,0 +1,1 @@
+"""Spatial optimization-potential assessment."""
