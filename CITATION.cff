@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+title: "Reproducibility package for remote-sensing-informed heat-resilient spatial allocation in Xi Ujimqin Banner"
+message: "If you use this code or dataset, please cite the associated manuscript."
+type: software
+authors:
+  - family-names: "Jiang"
+    given-names: "Kun"
+year: 2026
+license: MIT
