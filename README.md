@@ -1,100 +1,220 @@
-# Reproducibility Package: Heat-Resilient Spatial Allocation in Xi Ujimqin Banner
+# Remote-Sensing-Informed Heat-Resilient Spatial Allocation for Xi Ujimqin Banner
 
-This repository provides the code, data structure, public-data acquisition workflow, and supplementary monitoring data for reproducing the manuscript experiments on remote-sensing-informed heat-resilient spatial allocation in Xi Ujimqin Banner.
+> Complete reproducibility package for the manuscript on LST-driving mechanisms, spatial optimization-potential assessment, and multi-objective heat-resilient allocation in a semi-arid grassland county region.
 
-The repository was prepared to address the reviewer request:
+---
 
-> Regarding Figure 4, is this based on real data? I strongly suggest the authors provide their source code and raw datasets for verification.
+## Overview
 
-## Main Answer
+This repository implements the full manuscript workflow:
 
-Figure 4 is generated from the fitted LST prediction model using spatial-unit observations, not from manually drawn or conceptual curves. The curves are partial dependence plots (PDP) and individual conditional expectation (ICE) plots for key LST-driving variables.
+- **Remote-sensing data construction**
+  - Landsat 8/9 LST and NDVI
+  - ESA WorldCover land-use proportions
+  - SRTM/Copernicus DEM terrain variables
+  - VIIRS nighttime-light socioeconomic proxy
+  - SVF/openness, road accessibility, ecological restriction, and economic-benefit layers
 
-## Repository Contents
+- **LST mechanism identification**
+  - CatBoost-based LST prediction
+  - Model-performance comparison
+  - Feature-importance ranking
+  - PDP/ICE reproduction for Figure 4
+
+- **Planning-oriented spatial potential assessment**
+  - Cooling-priority units
+  - Ventilation-priority units
+  - Economic-priority units
+  - Balanced-development units
+  - Ecological-restricted units
+
+- **Multi-objective spatial allocation**
+  - Baseline, cooling-priority, ventilation-priority, economic-priority, and balanced-development schemes
+  - Objective trade-off analysis among LST, SVF-based ventilation potential, and economic benefit
+
+- **Supplementary environmental monitoring**
+  - Water-quality monitoring appendix extraction and summary
+  - 7560 real monitoring records extracted from the supplied appendix DOCX
+
+---
+
+## Project Structure
 
 ```text
-data/
-  raw/
-    water_quality_monitoring_long.csv      # Real monitoring appendix data extracted from DOCX
-    water_quality_README.md
-    data_dictionary.csv                    # Spatial-unit table dictionary
-  example/
-    spatial_units_demo.csv                 # Demo table for code smoke tests only
-data_acquisition/
-  gee_export_spatial_layers.js             # Google Earth Engine export script
-  README.md                                # Public data acquisition workflow
-docs/
-  data_sources.md                          # Data-source and preprocessing notes
-  reproducibility_standard.md              # Journal-facing data/code standard
-  reviewer_response.md                     # Suggested response to reviewer
-src/
-  extract_water_quality_docx.py            # Converts water-quality DOCX tables to CSV
-  figure4_pdp_ice.py                       # Reproduces Figure 4
-  feature_importance.py                    # Reproduces feature-importance table
-  model_performance.py                     # Reproduces model-comparison metrics
-  classify_spatial_potential.py            # Reproduces spatial potential classification
-  optimize_allocation.py                   # Reproduces allocation scenario metrics
-  tradeoff_analysis.py                     # Reproduces objective trade-off table
-  summarize_water_quality.py               # Summarizes monitoring data
-  make_all_figures_and_tables.py           # Runs the reproducible manuscript outputs
-  run_all.py                               # Main entry point
+heat-resilient-xi-ujimqin/
+|-- core/
+|   |-- remote_sensing/          # Public remote-sensing dataset registry
+|   |-- lst_modeling/            # LST model and PDP/ICE interpretation utilities
+|   |-- spatial_potential/       # Planning-oriented potential classification
+|   |-- optimization/            # QLA-COA-style allocation utilities
+|   `-- water_quality/           # Monitoring-data summary helpers
+|-- data/
+|   |-- raw/                     # Real/released source tables
+|   `-- example/                 # Smoke-test demo table only
+|-- data_acquisition/
+|   |-- gee_export_spatial_layers.js
+|   `-- README.md
+|-- configs/
+|   |-- default.yaml
+|   `-- experiments/
+|       `-- full_reproduction.yaml
+|-- docs/
+|   |-- data_availability_statement.md
+|   |-- data_sources.md
+|   |-- reproducibility_standard.md
+|   |-- result_reproduction_map.md
+|   `-- reviewer_response.md
+|-- experiments/
+|   |-- run_full_reproduction.py
+|   |-- run_lst_modeling.py
+|   |-- run_spatial_potential.py
+|   |-- run_optimization.py
+|   `-- run_water_quality.py
+|-- src/                         # Script-level reproducibility entry points
+|-- outputs/                     # Generated tables and figures
+|-- results/                     # Paper-style result folder
+|-- run.py                       # Main CLI
+`-- requirements.txt
 ```
 
-## Data Required for Full Manuscript Reproduction
+---
 
-The full spatial modeling workflow expects:
+## Environment Setup
+
+```bash
+conda create -n xuji_repro python=3.10 -y
+conda activate xuji_repro
+pip install -r requirements.txt
+```
+
+Google Earth Engine exports require an authenticated Earth Engine account and uploaded study-boundary/spatial-unit assets.
+
+---
+
+## Data Preparation
+
+### 1. Rebuild public remote-sensing predictors
+
+Use:
+
+```text
+data_acquisition/gee_export_spatial_layers.js
+```
+
+The script exports Landsat LST/NDVI, WorldCover classes, DEM/slope, and VIIRS nighttime-light summaries to spatial units.
+
+### 2. Place the real spatial-unit table
+
+Full manuscript reproduction requires:
 
 ```text
 data/raw/spatial_units_xi_ujimqin_2023.csv
 ```
 
-This file should contain one row per spatial analysis unit and the variables listed in `data/raw/data_dictionary.csv`, including LST, NDVI, bare-land proportion, land-use intensity, SVF, nighttime light, elevation, road accessibility, land-use proportions, ecological restriction, economic benefit, cooling potential, and ventilation potential.
-
-The repository includes `data/example/spatial_units_demo.csv` only to verify that the code runs. It is not the manuscript dataset and must not be cited as raw evidence.
-
-## Public Online Data Sources
-
-The public-data workflow can reconstruct most spatial variables from:
-
-- Landsat 8/9 Collection 2 Level-2 Surface Temperature and Surface Reflectance
-- ESA WorldCover 2021 v200
-- NASA SRTMGL1 30 m DEM
-- VIIRS DNB annual nighttime-light composites
-- OpenStreetMap road data or another documented road layer
-- Uploaded study boundary and spatial-unit polygons
-
-See `data_acquisition/gee_export_spatial_layers.js` and `docs/data_sources.md`.
-
-## Real Monitoring Data Included
-
-The file `data/raw/water_quality_monitoring_long.csv` is extracted from the supplied monitoring appendix DOCX. It contains 7560 water-quality records across 33 appendix tables, 149 monitoring stations, 3 sampling months, and 24 indicators. These data support environmental-background and ecological/water-system documentation, but they do not replace the remote-sensing spatial-unit table needed for Figure 4.
-
-## Installation
-
-```bash
-pip install -r requirements.txt
-```
-
-Google Earth Engine exports require an authenticated Earth Engine account and uploaded boundary/spatial-unit assets.
-
-## Run All Reproducible Outputs
-
-After placing the real spatial-unit table at `data/raw/spatial_units_xi_ujimqin_2023.csv`, run:
-
-```bash
-python src/run_all.py
-```
-
-Outputs are written to:
+Required columns are listed in:
 
 ```text
-outputs/
-  figures/
-  tables/
-  reproduction_manifest.csv
+data/raw/data_dictionary.csv
 ```
 
-## Reproduce Figure 4 Only
+### 3. Water-quality monitoring data
+
+The supplied monitoring appendix DOCX has been converted locally into:
+
+```text
+data/raw/water_quality_monitoring_long.csv
+```
+
+This file supports ecological/water-environment documentation, but it does not replace the spatial-unit table required for the LST model and Figure 4.
+
+---
+
+## Usage
+
+### Full manuscript reproduction
+
+```bash
+python run.py --mode all --config configs/experiments/full_reproduction.yaml
+```
+
+Equivalent:
+
+```bash
+python experiments/run_full_reproduction.py
+```
+
+### LST modeling and Figure 4
+
+```bash
+python run.py --mode lst
+```
+
+Outputs:
+
+```text
+outputs/model_performance.csv
+outputs/tables/feature_importance.csv
+outputs/figures/figure4_pdp_ice.png
+```
+
+### Spatial potential classification
+
+```bash
+python run.py --mode potential
+```
+
+Outputs:
+
+```text
+outputs/spatial_units_classified.csv
+outputs/tables/spatial_potential_summary.csv
+```
+
+### Allocation and trade-off experiments
+
+```bash
+python run.py --mode optimization
+```
+
+Outputs:
+
+```text
+outputs/allocation_scenarios.csv
+outputs/tables/tradeoff_correlations.csv
+```
+
+### Water-quality monitoring summary
+
+```bash
+python run.py --mode water-quality
+```
+
+Output:
+
+```text
+outputs/tables/water_quality_summary.csv
+```
+
+---
+
+## Manuscript Result Map
+
+| Manuscript component | Script |
+|---|---|
+| Dataset construction | `data_acquisition/gee_export_spatial_layers.js` |
+| Model comparison | `src/model_performance.py` |
+| Feature importance | `src/feature_importance.py` |
+| Figure 4 PDP/ICE | `src/figure4_pdp_ice.py` |
+| Spatial potential classes | `src/classify_spatial_potential.py` |
+| Allocation scenarios | `src/optimize_allocation.py` |
+| Objective trade-offs | `src/tradeoff_analysis.py` |
+| Monitoring-data appendix | `src/extract_water_quality_docx.py`, `src/summarize_water_quality.py` |
+
+---
+
+## Reviewer Note
+
+Figure 4 is based on fitted model responses from spatial-unit observations. It is not a manually drawn conceptual figure. Reproduce it with:
 
 ```bash
 python src/figure4_pdp_ice.py \
@@ -102,6 +222,4 @@ python src/figure4_pdp_ice.py \
   --output outputs/figures/figure4_pdp_ice.png
 ```
 
-## Recommended Manuscript Statement
-
-> The source code, data dictionary, public remote-sensing acquisition workflow, released spatial-unit dataset, and supplementary monitoring data used for reproducibility are available at the GitHub repository. Figure 4 was generated from the fitted LST prediction model using `src/figure4_pdp_ice.py`.
+The included example table is only for smoke testing. The final manuscript archive should include the real spatial-unit table at `data/raw/spatial_units_xi_ujimqin_2023.csv`.
