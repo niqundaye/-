@@ -1,0 +1,10 @@
+inherits: ../default.yaml
+run:
+  stages:
+    - lst_modeling
+    - feature_importance
+    - figure4_pdp_ice
+    - spatial_potential
+    - allocation
+    - tradeoff
+    - water_quality_summary
