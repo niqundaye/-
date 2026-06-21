@@ -1,10 +1,20 @@
 inherits: ../default.yaml
 run:
   stages:
+    - figure1_study_area
+    - figure2_framework
+    - figure3_feature_importance
     - lst_modeling
     - feature_importance
     - figure4_pdp_ice
+    - figure5_spatial_layers
+    - figure6_potential_classes
+    - figure7_mechanism_strategy
     - spatial_potential
     - allocation
+    - figure8_pareto_tradeoff
+    - figure9_allocation_schemes
+    - figure10_scheme_performance
     - tradeoff
+    - tables
     - water_quality_summary
