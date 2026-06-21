@@ -1,0 +1,21 @@
+column,type,unit_or_range,description
+unit_id,string,identifier,Spatial analysis unit identifier
+township_id,string,identifier,Township or administrative subunit identifier
+area_km2,float,km2,Area of the spatial analysis unit
+lst_c,float,deg C,Mean land surface temperature aggregated to the spatial unit
+ndvi,float,0-1,Normalized Difference Vegetation Index
+bare_land_prop,float,0-1,Proportion of bare or exposed land
+land_use_intensity,float,0-1,Composite land-development intensity indicator
+svf,float,0-1,Sky view factor or SVF-based openness indicator
+night_light,float,0-1,Normalized VIIRS nighttime-light intensity
+elevation_m,float,m,Mean elevation
+road_accessibility,float,0-1,Normalized road accessibility indicator
+slope_deg,float,degrees,Mean terrain slope
+grassland_prop,float,0-1,Grassland area proportion
+construction_land_prop,float,0-1,Construction-land area proportion
+industrial_land_prop,float,0-1,Industrial-land area proportion
+water_wetland_prop,float,0-1,Water or wetland area proportion
+ecological_restricted,integer,0 or 1,Whether the unit is in an ecological restriction layer
+economic_benefit,float,0-1,Normalized land-development economic output benefit
+cooling_potential,float,0-1,Cooling-priority potential score
+ventilation_potential,float,0-1,SVF-based ventilation and heat-dissipation potential score
