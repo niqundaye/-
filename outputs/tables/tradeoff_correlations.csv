@@ -1,0 +1,4 @@
+objective_pair,pearson_r
+mean_lst_c vs svf_potential,-0.5734202098242156
+mean_lst_c vs economic_benefit,0.6207993409384142
+svf_potential vs economic_benefit,-0.5232847518797002
